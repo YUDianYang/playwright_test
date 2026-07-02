@@ -31,5 +31,5 @@ def test_login_failed(page: Page):
      items = page.locator(".inventory_item")
      print(f"页面上有 {items.count()} 个商品")
    
-    # # 关闭浏览器
+    # # 结束，关闭浏览器
     #  browser.close()

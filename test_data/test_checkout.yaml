@@ -1,0 +1,21 @@
+checkout:
+  - name: 测试结账功能（单商品）
+    product_indices: [0]
+    complete_header: Thank you for your order!
+    first_name: "Test User"
+    last_name: "Test User"
+    zip_code: "12345"
+
+  - name: 测试结账功能（双商品）
+    product_indices: [0, 1]
+    complete_header: Thank you for your order!
+    first_name: "Test User"
+    last_name: "Test User"
+    zip_code: "12345"
+    
+  - name: 测试结账功能（三商品）
+    product_indices: [0, 3, 4]
+    complete_header: Thank you for your order!
+    first_name: "Test User"
+    last_name: "Test User"
+    zip_code: "12345"

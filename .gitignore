@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Pytest
+.pytest_cache/
+pytestdebug.log
+
+# Logs
+logs/
+
+# Screenshots
+screenshots/
+
+# Allure
+allure-results/
+allure-report/
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# macOS
+.DS_Store

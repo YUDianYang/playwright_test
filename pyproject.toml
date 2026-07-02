@@ -1,0 +1,26 @@
+[tool.pytest.ini_options]
+testpaths = ["TestCase"]
+addopts = "--alluredir=allure-results -v --tb=short"
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+markers = [
+    "login: 登录相关测试",
+    "checkout: 结账相关测试",
+    "cart: 购物车相关测试",
+    "smoke: 冒烟测试",
+    "regression: 回归测试",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+]
+
+[tool.pytest_html]
+self_contained = true
+show_failure = true
+show_error = true
+show_skipped = true
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"

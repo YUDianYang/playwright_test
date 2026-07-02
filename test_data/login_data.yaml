@@ -1,0 +1,31 @@
+login_tests:
+  - name: 成功登录_标准用户
+    username: standard_user
+    password: secret_sauce
+    expected_title: Swag Labs
+    test_type: success
+
+  - name: 失败登录_用户名为空
+    username: ""
+    password: secret_sauce
+    expected_error: "Epic sadface: Username is required"
+    test_type: fail
+
+  - name: 失败登录_密码为空
+    username: standard_user
+    password: ""
+    expected_error: "Epic sadface: Password is required"
+    test_type: fail
+
+  - name: 登录失败_锁定用户
+    username: locked_out_user
+    password: secret_sauce
+    expected_error: "Epic sadface: Sorry, this user has been locked out."
+    test_type: fail
+
+login_out_tests:
+  - name: 成功登录_标准用户
+    username: standard_user
+    password: secret_sauce
+    
+    

@@ -1,0 +1,6 @@
+add_to_cart_tests:
+  - name: 成功添加商品到购物车
+    product_name: Sauce Labs Backpack
+    test_type: success
+    product_index: 0
+    product_price: $29.99

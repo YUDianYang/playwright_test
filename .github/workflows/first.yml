@@ -26,3 +26,6 @@ jobs:
 
       - name: check pytest
         run: pytest --version
+
+      - name: Run Loginout Test
+        run: pytest TestCases/test_loginout.py -v -s

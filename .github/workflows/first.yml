@@ -4,7 +4,7 @@ on:
   push:
 
 jobs:
-  test:
+  playwright-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -14,7 +14,7 @@ jobs:
       - name: setup python
         uses: actions/setup-python@v5
         with:
-          python-version: 3.12
+          python-version: "3.12"
           cache: pip
           cache-dependency-path: requirements.txt
 
@@ -22,8 +22,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-${{runner.os}}- ${{ hashFiles('requirements.txt') }}
-          
+          key: playwright-${{runner.os}}-${{ hashFiles('requirements.txt') }}
+          restore-keys: playwright-${{runner.os}}-
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -38,23 +39,12 @@ jobs:
         run: |
           pytest TestCase/test_login_out.py -v -s
         
-      - name: Upload Allure Results
+      - name: Upload Test Artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: allure-results
-          path: allure-results
-
-      - name: Upload Screenshots
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: screenshots
-          path: screenshots
-        
-      - name: Upload Logs
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: logs
-          path: logs
+          name: playwright-artifacts
+          path: |
+            allure-results
+            screenshots
+            logs

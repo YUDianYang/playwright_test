@@ -10,5 +10,9 @@ jobs:
     steps:
       - name: print Hello
         run: echo "Hello GitHub Actions!"
+      - name: set up python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
       - name: python version
         run: python --version

@@ -35,7 +35,9 @@ jobs:
 
       - name: Run Loginout Test
         env:
-          HEADLESS: true
+          HEADLESS: "true"
+          TEST_USER: ${{ secrets.TEST_USER }}
+          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
         run: |
           pytest TestCase/test_login_out.py -v -s
         

@@ -9,6 +9,8 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from pages.login_page import LoginPage
 
+print(os.getenv("TEST_USER"))
+
 def load_logout_data():
     data_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "test_data/login_data.yaml")
     with open(data_path, "r", encoding="utf-8") as file:

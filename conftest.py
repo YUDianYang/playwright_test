@@ -42,7 +42,18 @@ def playwright_session():
 @pytest.fixture(scope="session")
 def browser(playwright_session):
     """浏览器实例，整个测试周期复用"""
-    browser = getattr(playwright_session, test_config.browser).launch(headless=test_config.headless)
+    headless = os.getenv(
+        "HEADLESS",
+        str(test_config.headless)
+    ).lower() == "true"
+    logger.info(f"浏览器: {test_config.browser}")
+    logger.info(f"Headless: {headless}")
+
+    browser = getattr(
+        playwright_session,
+        test_config.browser
+    ).launch(headless=headless)
+
     yield browser
     browser.close()
 

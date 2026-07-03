@@ -28,5 +28,7 @@ jobs:
         run: pytest --version
 
       - name: Run Loginout Test
+        env:
+          HEADLESS: true
         run: |
           pytest TestCase/test_login_out.py -v -s

@@ -10,3 +10,5 @@ jobs:
     steps:
       - name: print Hello
         run: echo "Hello GitHub Actions!"
+      - name: python version
+        run: python --version

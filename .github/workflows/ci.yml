@@ -57,6 +57,7 @@ jobs:
           BROWSER: ${{ matrix.browser }}
         run: |
           pytest TestCase/test_login_out.py -v -s
+ 
       
       - name: Upload Test Artifacts
         if: always()

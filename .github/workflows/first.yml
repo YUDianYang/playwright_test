@@ -5,12 +5,11 @@ on:
 
 jobs:
   playwright-test:
-    strategy: matrix
+    strategy: 
     matrix:
       Browser:
         - "chrome"
         - "firefox"
-        # - "safari"
     runs-on: ubuntu-latest
 
     steps:

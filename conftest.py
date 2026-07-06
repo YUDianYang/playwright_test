@@ -46,12 +46,17 @@ def browser(playwright_session):
         "HEADLESS",
         str(test_config.headless)
     ).lower() == "true"
-    logger.info(f"浏览器: {test_config.browser}")
+
+    browser_name = os.getenv(
+        "BROWSER",
+        test_config.browser
+)
+    logger.info(f"浏览器: {browser_name}")
     logger.info(f"Headless: {headless}")
 
     browser = getattr(
         playwright_session,
-        test_config.browser
+        browser_name
     ).launch(headless=headless)
 
     yield browser
@@ -106,11 +111,14 @@ def pytest_sessionfinish(session, exitstatus):
     """测试会话结束后自动生成报告"""
     # 创建 environment.properties 文件
     env_file_path = os.path.join("allure-results", "environment.properties")
+    # 从环境变量或配置中获取浏览器信息
+    browser_name = os.getenv("BROWSER", test_config.browser)
+    headless = os.getenv("HEADLESS", str(test_config.headless)).lower() == "true"
     with open(env_file_path, "w", encoding="utf-8") as f:
         f.write(f"Environment={test_config.current_env}\n")
         f.write(f"BaseURL={test_config.base_url}\n")
-        f.write(f"Browser={test_config.browser}\n")
-        f.write(f"Headless={test_config.headless}\n")
+        f.write(f"Browser={browser_name}\n")
+        f.write(f"Headless={headless}\n")
         f.write(f"Timeout={test_config.timeout}\n")
         f.write(f"PythonVersion=3.12\n")
         f.write(f"PytestVersion=8.4.1\n")

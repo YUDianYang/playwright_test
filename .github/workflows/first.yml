@@ -5,6 +5,12 @@ on:
 
 jobs:
   playwright-test:
+    strategy: matrix
+    matrix:
+      Browser:
+        - "chrome"
+        - "firefox"
+        # - "safari"
     runs-on: ubuntu-latest
 
     steps:
@@ -38,6 +44,7 @@ jobs:
           HEADLESS: "true"
           TEST_USER: ${{ secrets.TEST_USER }}
           TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
+          BROWSER: ${{ matrix.Browser }}
         run: |
           pytest TestCase/test_login_out.py -v -s
         

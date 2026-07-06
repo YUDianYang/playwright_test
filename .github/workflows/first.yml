@@ -7,10 +7,10 @@ jobs:
   playwright-test:
     runs-on: ubuntu-latest
     strategy:
-    matrix:
-      Browser:
-        - "chrome"
-        - "firefox"
+      matrix:
+        browser:
+          - chromium
+          - firefox
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -42,7 +42,7 @@ jobs:
           HEADLESS: "true"
           TEST_USER: ${{ secrets.TEST_USER }}
           TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
-          BROWSER: ${{ matrix.Browser }}
+          BROWSER: ${{ matrix.browser }}
         run: |
           pytest TestCase/test_login_out.py -v -s
         

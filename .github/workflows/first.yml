@@ -5,7 +5,7 @@ on:
 
 jobs:
   playwright-test:
-  strategy: 
+  strategy:
     matrix:
       Browser:
         - "chrome"

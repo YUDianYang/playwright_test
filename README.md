@@ -105,3 +105,7 @@ allure generate allure-results -o allure-report --clean
 allure serve allure-results
 
 ================================================================================
+
+## CI/CD 学习记录
+
+- 完成 GitHub Pull Request 流程学习。

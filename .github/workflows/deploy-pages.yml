@@ -1,0 +1,15 @@
+name: Deploy Allure Report
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: show workflows
+        run: |
+          echo "CI FINISHED"

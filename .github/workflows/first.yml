@@ -73,12 +73,12 @@ jobs:
         run: |
           allure generate allure-results -o allure-report --clean
       
-      - name: Upload Pages Artifacts
+      - name: Upload Allure Report
         if: always()
-        uses: actions/upload-pages-artifacts@v4
+        uses: actions/upload-artifact@v4
         with:
           name: allure-report-${{ matrix.browser }}
-          pages: allure-report
+          path: allure-report
         
         
       - name: Upload Test Artifacts

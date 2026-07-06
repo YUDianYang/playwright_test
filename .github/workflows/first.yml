@@ -5,12 +5,12 @@ on:
 
 jobs:
   playwright-test:
-  strategy:
+    runs-on: ubuntu-latest
+    strategy:
     matrix:
       Browser:
         - "chrome"
         - "firefox"
-    runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4

@@ -2,14 +2,30 @@ name: Deploy Allure Report
 
 on:
   workflow_run:
-    workflows: ["CI"]
+    workflows: 
+      - CI
     types:
       - completed
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
+
     steps:
-      - name: show workflows
+      - name: Download Test Artifacts
+        uses: dawidd6/action-download-artifact@v11
+        with:
+          workflow: ci.yml
+          run_id: ${{ github.event.workflow_run.id }}
+          path: artifacts
+
+      - name: Show Downloaded Files
         run: |
-          echo "CI FINISHED"
+          pwd
+          ls -R artifacts

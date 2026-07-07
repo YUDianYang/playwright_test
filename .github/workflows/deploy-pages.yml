@@ -34,7 +34,7 @@ jobs:
         run: |
           mkdir merged-results
 
-          find artifacts -types d -name "allure-results" | while read dir
+          find artifacts -type d -name "allure-results" | while read dir
           do
             echo "Copying: $dir"
             cp -r "$dir"/* merged-results/ || true

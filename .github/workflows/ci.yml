@@ -49,16 +49,6 @@ jobs:
       - name: Install Playwright Browser
         run: playwright install --with-deps
 
-      - name: Install Allure commandline
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y default-jre
-          wget https://github.com/allure-framework/allure2/releases/download/2.34.1/allure-2.34.1.tgz
-          tar -zxvf allure-2.34.1.tgz
-          sudo mv allure-2.34.1 /opt/allure
-          sudo ln -sf /opt/allure/bin/allure /usr/local/bin/allure
-          allure --version
-
       - name: Run Loginout Test
         env:
           HEADLESS: "true"
@@ -67,25 +57,13 @@ jobs:
           BROWSER: ${{ matrix.browser }}
         run: |
           pytest TestCase/test_login_out.py -v -s
-
-      - name: Generate Allure Report
-        if: always()
-        run: |
-          allure generate allure-results -o allure-report --clean
+ 
       
-      - name: Upload Allure Report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: allure-report-${{ matrix.browser }}
-          path: allure-report
-        
-        
       - name: Upload Test Artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-artifacts
+          name: test-results-${{ matrix.browser }}
           path: |
             allure-results
             screenshots

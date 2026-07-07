@@ -6,7 +6,6 @@ on:
       - CI
     types:
       - completed
-  workflow_dispatch:
 
 permissions:
   contents: read
@@ -19,6 +18,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
       - name: Download Test Artifacts
         uses: dawidd6/action-download-artifact@v11
         with:
@@ -31,7 +33,7 @@ jobs:
           pwd
           ls -R artifacts
 
-      - name: Merge Allure Request
+      - name: Merge Allure Results
         run: |
           mkdir merged-results
 

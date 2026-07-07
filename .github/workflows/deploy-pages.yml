@@ -6,6 +6,7 @@ on:
       - CI
     types:
       - completed
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -39,3 +40,6 @@ jobs:
             echo "Copying: $dir"
             cp -r "$dir"/* merged-results/ || true
           done
+
+          echo "Merged Results:"
+          ls -R merged-results

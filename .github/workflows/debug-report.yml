@@ -13,3 +13,67 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+
+      - name: Download Test Artifacts
+        uses: dawidd6/action-download-artifact@v11
+        with:
+          workflow: ci.yml
+          branch: ${{ github.ref_name }}
+          workflow_conclusion: success
+          path: artifacts
+
+      - name: Show Downloaded Files
+        run: |
+          echo "Artifacts:"
+          ls -R artifacts
+
+      - name: Merge Allure Results
+        run: |
+          mkdir -p merged-results
+          find artifacts -type d -name "allure-results" | while read dir
+          do
+            echo "--------------------------------"
+            echo "Processing: $dir"
+
+            count=$(find "$dir" -type f | wc -l)
+            echo "Files: $count"
+
+            cp -r $dir/* merged-results/ || true
+          done
+
+          echo "====================================="
+          echo "Merge Results:"
+          total=$(find merged-results -type f | wc -l)
+          echo "Total Files: $total"
+
+          ls -R merged-results
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Install Allure Commandline
+        run: |
+          wget https://github.com/allure-framework/allure2/releases/download/2.34.1/allure-2.34.1.tgz
+
+          tar -zxf allure-2.34.1.tgz
+
+          sudo mv allure-2.34.1 /opt/allure
+
+          sudo ln -sf /opt/allure/bin/allure /usr/local/bin/allure
+
+          echo "Allure Version:"
+          allure --version
+
+      - name: Generate Allure Report
+        run: |
+          allure generate merged-results \
+            -o allure-report \
+            --clean
+            
+      - name: Verify Allure Report
+        run: |
+          echo "Allure report generated:"
+          ls -R allure-report

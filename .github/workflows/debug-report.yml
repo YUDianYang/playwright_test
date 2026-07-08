@@ -26,3 +26,24 @@ jobs:
         run: |
           echo "Artifacts:"
           ls -R artifacts
+
+      - name: Merge Allure Results
+        run: |
+          mkdir -p merged_results
+          find artifacts -type d -name "allure-results" | while read dir
+          do
+            echo "--------------------------------"
+            echo "Processing: $dir"
+
+            count = $(find "$dir" -type f | wc -l)
+            echo "Files: $count"
+
+            cp -r $dir/* merged_results/ || true
+          done
+
+          echo "====================================="
+          echo "Merge Results:"
+          total = $(find merged_results -type f | wc -l)
+          echo "Total Files: $total"
+
+          ls -R merged_results

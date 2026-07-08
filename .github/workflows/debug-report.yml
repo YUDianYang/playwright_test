@@ -29,7 +29,7 @@ jobs:
 
       - name: Merge Allure Results
         run: |
-          mkdir -p merged_results
+          mkdir -p merged-results
           find artifacts -type d -name "allure-results" | while read dir
           do
             echo "--------------------------------"

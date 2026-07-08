@@ -13,11 +13,16 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-      - name: Show Workspace
-        run: |
-          echo "Current directory:"
-          pwd
 
-          echo ""
-          echo "Repository files:"
-          ls -la
+      - name: Download Test Artifacts
+        uses: dawidd6/action-download-artifact@v11
+        with:
+          workflow: ci.yml
+          branch: ${{ github.ref_name }}
+          workflow_conclusion: success
+          path: artifacts
+
+      - name: Show Downloaded Files
+        run: |
+          echo "Artifacts:"
+          ls -R artifacts

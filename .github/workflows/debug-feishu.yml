@@ -1,0 +1,22 @@
+name: Debug Feishu Notification
+
+on:
+  workflow_dispatch:
+
+jobs:
+  notify: 
+    runs-on: ubuntu-latest
+
+  steps:
+    - name: Send Hello to Feishu
+      env:
+        FEISHU_WEBHOOK: ${{secrets.FEISHU_WEBHOOK}}
+      run: |
+        curl -X POST "$FEISHU_WEBHOOK" \
+          -H "Content-Type: application/json" \
+          -d '{
+              "msg_type": "text",
+              "content": {
+                "text": "🚀 Playwright CI 测试成功！Hello Feishu!"
+              }
+            }'

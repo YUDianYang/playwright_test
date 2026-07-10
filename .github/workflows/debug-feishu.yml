@@ -33,15 +33,14 @@ jobs:
           echo "========== Feishu Message =========="
           echo "$MESSAGE"
           echo "========== End Feishu Message =========="
-          echo "$MESSAGE" | cat -A
+          JSON=$(jq -n \
+            --arg text "$MESSAGE" \
+            '{msg_type:"text",content:{text:$text}}')
+
+          echo "========== JSON =========="
+          echo "$JSON"
+          echo "=========================="
 
           curl -X POST "$FEISHU_WEBHOOK" \
             -H "Content-Type: application/json" \
-            -d @- <<EOF
-          {
-            "msg_type": "text",
-            "content": {
-              "text": "$MESSAGE"
-            }
-          }
-          EOF
+            -d "$JSON"          

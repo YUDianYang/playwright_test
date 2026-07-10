@@ -14,6 +14,10 @@ permissions:
 
 jobs:
   deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url}}
+    
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
@@ -68,6 +72,7 @@ jobs:
             --clean
 
       - name: Upload Pages Artifact
+        continue-on-error: true
         uses: actions/upload-pages-artifact@v3
         with:
           path: allure-report
@@ -75,3 +80,37 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+      
+      - name: Send Dynamic Message
+        env:
+          FEISHU_WEBHOOK: ${{secrets.FEISHU_WEBHOOK}}
+          REPOSITORY: ${{github.repository}}
+          BRANCH: ${{github.ref_name}}
+          ACTOR: ${{github.actor}}
+          WORKFLOW: ${{github.workflow}}
+          COMMIT: ${{github.sha}}
+          STATUS: success
+          REPORT_URL: ${{ steps.deployment.outputs.page_url}}
+
+        run: |
+          MESSAGE=$(cat <<EOF
+          🚀 Playwright 自动化测试完成
+          📦 项目：$REPOSITORY
+          🌿 分支：$BRANCH
+          👤 提交人：$ACTOR
+          ⚙ Workflow: $WORKFLOW
+          ✅ 状态：$STATUS
+          📝 Commit: ${COMMIT:0:7}
+          🔗 测试报告：$REPORT_URL
+          EOF
+          )
+          
+          echo "$MESSAGE"
+
+          JSON=$(jq -n \
+            --arg text "$MESSAGE" \
+            '{msg_type:"text",content:{text:$text}}')
+
+          curl -X POST "$FEISHU_WEBHOOK" \
+            -H "Content-Type: application/json" \
+            -d "$JSON"       

@@ -29,10 +29,11 @@ jobs:
           📝 Commit: ${COMMIT:0:7}
           EOF
           )
-
+          
           echo "========== Feishu Message =========="
           echo "$MESSAGE"
           echo "========== End Feishu Message =========="
+          echo "$MESSAGE" | cat -A
 
           curl -X POST "$FEISHU_WEBHOOK" \
             -H "Content-Type: application/json" \

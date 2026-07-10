@@ -73,6 +73,15 @@ jobs:
             -o allure-report \
             --clean
             
+      - name: Show Allure Summary
+        run: |
+          echo "========== summary.json =========="
+          cat allure-report/widgets/summary.json
+
+          echo ""
+          echo "========== statistic =========="
+          jq '.statistic' allure-report/widgets/summary.json
+            
       - name: Verify Allure Report
         run: |
           echo "Allure report generated:"

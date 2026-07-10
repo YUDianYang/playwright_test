@@ -19,13 +19,16 @@ jobs:
           STATUS: success
 
         run: |
-          MESSAGE="🚀 Playwright 自动化测试完成
+          MESSAGE=$(cat <<EOF
+          🚀 Playwright 自动化测试完成
           📦 项目：$REPOSITORY
           🌿 分支：$BRANCH
           👤 提交人：$ACTOR
           ⚙ Workflow: $WORKFLOW
           ✅ 状态：$STATUS
-          📝 Commit: ${COMMIT:0:7}"
+          📝 Commit: ${COMMIT:0:7}
+          EOF
+          )
 
           echo "========== Feishu Message =========="
           echo "$MESSAGE"
@@ -33,7 +36,7 @@ jobs:
 
           curl -X POST "$FEISHU_WEBHOOK" \
             -H "Content-Type: application/json" \
-            -d @- <<EOF 
+            -d @- <<EOF
           {
             "msg_type": "text",
             "content": {

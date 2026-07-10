@@ -1,42 +1,39 @@
 name: Deploy Allure Report
-
+# 触发条件：CI 工作流完成
 on:
   workflow_run:
     workflows: 
       - CI
     types:
       - completed
-
+# 权限：读取内容、写入页面、写入 ID 令牌
 permissions:
   contents: read
   pages: write
   id-token: write
-
+# 任务：部署报告
 jobs:
   deploy:
+  # 环境：GitHub Pages
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url}}
-    
+    # 仅在 CI 工作流成功时执行
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
-
+ 
     steps:
+    # 识别检出仓库代码
       - name: Checkout Repository
         uses: actions/checkout@v4
-
+    # 下载测试工件
       - name: Download Test Artifacts
         uses: dawidd6/action-download-artifact@v11
         with:
           workflow: ci.yml
           run_id: ${{ github.event.workflow_run.id }}
           path: artifacts
-
-      - name: Show Downloaded Files
-        run: |
-          pwd
-          ls -R artifacts
-
+    # 合并 Allure 结果
       - name: Merge Allure Results
         run: |
           mkdir -p merged-results
@@ -45,13 +42,13 @@ jobs:
             echo "Processing: $dir"
             cp -r "$dir"/* merged-results/ || true
           done
-
+    # 设置 Java 环境
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
-
+    # 安装 Allure 命令行工具  
       - name: Install Allure Commandline
         run: |
           wget https://github.com/allure-framework/allure2/releases/download/2.34.1/allure-2.34.1.tgz
@@ -64,24 +61,24 @@ jobs:
 
           echo "Allure Version:"
           allure --version
-
+    # 生成 Allure 报告
       - name: Generate Allure Report
         run: |
           allure generate merged-results \
             -o allure-report \
             --clean
-
+    # 上传报告到 GitHub Pages
       - name: Upload Pages Artifact
         continue-on-error: true
         uses: actions/upload-pages-artifact@v3
         with:
           path: allure-report
-
+    # 部署报告到 GitHub Pages
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-      
-      - name: Send Dynamic Message
+    # 发送消息到飞书群聊
+      - name: Send Dynamic Message to Group
         env:
           FEISHU_WEBHOOK: ${{secrets.FEISHU_WEBHOOK}}
           REPOSITORY: ${{github.repository}}
@@ -92,7 +89,17 @@ jobs:
           STATUS: success
           REPORT_URL: ${{ steps.deployment.outputs.page_url}}
 
+
         run: |
+          PASSED=$(jq '.statistic.passed' allure-report/widgets/summary.json)
+          FAILED=$(jq '.statistic.failed' allure-report/widgets/summary.json)
+          BROKEN=$(jq '.statistic.broken' allure-report/widgets/summary.json)
+          SKIPPED=$(jq '.statistic.skipped' allure-report/widgets/summary.json)
+          TOTAL=$(jq '.statistic.total' allure-report/widgets/summary.json)
+
+          DURATION=$(jq '.time.duration' allure-report/widgets/summary.json)
+          DURATION=$((DURATION / 1000))
+
           MESSAGE=$(cat <<EOF
           🚀 Playwright 自动化测试完成
           📦 项目：$REPOSITORY
@@ -101,16 +108,24 @@ jobs:
           ⚙ Workflow: $WORKFLOW
           ✅ 状态：$STATUS
           📝 Commit: ${COMMIT:0:7}
-          🔗 测试报告：$REPORT_URL
+
+          📊 测试统计
+          ✔ Passed: $PASSED
+          ✖ Failed: $FAILED
+          ⚠ Broken: $BROKEN
+          ⏭ Skipped: $SKIPPED
+          📈 Total: $TOTAL
+          
+          ⏱ 执行时间: ${DURATION}s
+
+          🔗 测试报告: $REPORT_URL
           EOF
           )
-          
-          echo "$MESSAGE"
 
           JSON=$(jq -n \
             --arg text "$MESSAGE" \
             '{msg_type:"text",content:{text:$text}}')
-
+ 
           curl -X POST "$FEISHU_WEBHOOK" \
             -H "Content-Type: application/json" \
             -d "$JSON"       

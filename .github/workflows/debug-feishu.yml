@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Send Hello to Feishu
+      - name: Send Dynamic Message
         env:
           FEISHU_WEBHOOK: ${{secrets.FEISHU_WEBHOOK}}
           REPOSITORY: ${{github.repository}}
@@ -37,7 +37,7 @@ jobs:
           {
             "msg_type": "text",
             "content": {
-              "text": "MESSAGE"
+              "text": "$MESSAGE"
             }
           }
           EOF

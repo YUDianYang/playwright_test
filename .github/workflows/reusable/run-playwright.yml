@@ -1,32 +1,38 @@
-name: Python Environment
+name: Run Playwright Tests
 on: 
   workflow_call:
 
 jobs:
-  setup:
+  test:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        browser: [chromium, firefox]
+
     steps:
+## 获取仓库检出代码
       - name: Checkout code
         uses: actions/checkout@v4
-
+## 设置 Python 版本
       - name: Set Python version
         uses: actions/setup-python@v5
         with:
           python-version: 3.12
           cache: pip
-
+## 安装依赖
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-
+## 缓存 playwright 浏览器
       - name: Cache playwright Browser
         id: playwright-cache
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
-
+## 安装 playwright 浏览器
       - name: Install playwright Browser
         run: |
           playwright install

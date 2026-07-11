@@ -110,12 +110,12 @@ jobs:
           📝 Commit: ${COMMIT:0:7}
 
           📊 测试统计
-          ✔ Passed: $PASSED
-          ✖ Failed: $FAILED
-          ⚠ Broken: $BROKEN
-          ⏭ Skipped: $SKIPPED
-          📈 Total: $TOTAL
-          
+          ✔ 成功: $PASSED
+          ✖ 失败: $FAILED
+          ⚠ 中断: $BROKEN
+          ⏭ 跳过: $SKIPPED
+          📈 总计: $TOTAL
+
           ⏱ 执行时间: ${DURATION}s
 
           🔗 测试报告: $REPORT_URL

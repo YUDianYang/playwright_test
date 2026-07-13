@@ -22,6 +22,7 @@ on:
       environment:
         description: "Environment to run tests on"
         required: true
+        type: choice
         default: "test"
         options:
           - test

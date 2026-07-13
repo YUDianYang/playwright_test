@@ -11,7 +11,7 @@ test:
     username: standard_user
     password: secret_sauce
 
-staging:
+stage:
   base_url: "https://staging.saucedemo.com/"
   timeout: 30000
   navigation_timeout: 60000
@@ -21,7 +21,7 @@ staging:
     username: staging_user
     password: staging_password
 
-production:
+prod:
   base_url: "https://www.saucedemo.com/"
   timeout: 30000
   navigation_timeout: 60000

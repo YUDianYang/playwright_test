@@ -76,7 +76,7 @@ jobs:
           python -m pip install -r requirements.txt
 
       - name: Install Playwright Browser
-        run: playwright install --with-deps
+        run: playwright install
 
       - name: Run Loginout Test
         env:

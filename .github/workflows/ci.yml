@@ -9,7 +9,35 @@ on:
   pull_request:
     branches:
       - main
-
+  workflow_dispatch:
+    inputs:
+      browser:
+        description: "Browser to run tests on"
+        required: true
+        type: choice
+        default: "chromium"
+        options:
+          - chromium
+          - firefox
+      environment:
+        description: "Environment to run tests on"
+        required: true
+        default: "test"
+        options:
+          - test
+          - stage
+          - prod
+      
+      marker:
+        description: "Marker to run tests on"
+        required: true
+        default: "all"
+        type: choice
+        options:
+          - all
+          - smoke
+          - regression
+        
 permissions:
   contents: read
   pages: write
